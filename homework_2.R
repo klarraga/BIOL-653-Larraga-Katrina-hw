@@ -1,6 +1,6 @@
-install.packages('iris')
+install.packages('iris') # Iris is a built in dataset, it comes when R is installed so there is no need to install it.
 install.packages('gapminder')
-install.packages('iris')
+
 iris
 library(ggplot2)
 
