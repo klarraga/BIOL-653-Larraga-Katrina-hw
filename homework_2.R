@@ -4,6 +4,8 @@ install.packages('gapminder')
 iris
 library(ggplot2)
 
+# You need to load gapminder
+
 # plot 1
 # why isnt this working?
 ggplot2(data = gapminder, aes(x = gdpPercap, y =lifeExp)) + geom_point()
@@ -44,6 +46,8 @@ frame()
 frame.new
 ?frame
 ?transform
+
+# I think your'e looking for: dev.new() here
 
 # restarted R session
 library(ggplot2)
