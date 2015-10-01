@@ -1,8 +1,20 @@
+<<<<<<< HEAD
 
 library(ggplot2)
 
 #### plot 1 ####
 
+=======
+install.packages('iris') # Iris is a built in dataset, it comes when R is installed so there is no need to install it.
+install.packages('gapminder')
+
+iris
+library(ggplot2)
+
+# You need to load gapminder
+
+# plot 1
+>>>>>>> f75d62915976ebbdff58daa7ff05586d7cbac01d
 # why isnt this working?
 ggplot2(data = gapminder, aes(x = gdpPercap, y =lifeExp)) + geom_point()
 
@@ -43,6 +55,8 @@ frame.new
 ?frame
 ?transform
 
+# I think your'e looking for: dev.new() here
+
 # restarted R session
 library(ggplot2)
 ggplot(data = gapminder, aes(x = gdpPercap, 
@@ -64,6 +78,7 @@ gapminder
 head(gapminder)
 # this works cause ram taught me
 
+# look at the arguments and examples for mutate() - the dplyr tutorial using the nycflights13 data will be useful to help you clean this up.
 mutate(gapminder, loggdpPercap = log(gapminder$'gdpPercap'
 ) )
 
@@ -94,7 +109,7 @@ rm(loggdpPercap)
 # jillian taught me how to save it to new_df
 
 mutate(gapminder, log_gdpPercap = log(gdpPercap))
-new_df <- mutate(gapminder, log_gdpPercap = log(gdpPercap))
+new_df <- mutate(gapminder, log_gdpPercap = log(gdpPercap)) # perfect
 
 new_df
 gapminder
