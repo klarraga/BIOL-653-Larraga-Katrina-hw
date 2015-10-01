@@ -1,10 +1,8 @@
-install.packages('iris')
-install.packages('gapminder')
-install.packages('iris')
-iris
+
 library(ggplot2)
 
-# plot 1
+#### plot 1 ####
+
 # why isnt this working?
 ggplot2(data = gapminder, aes(x = gdpPercap, y =lifeExp)) + geom_point()
 
@@ -38,7 +36,7 @@ rm(plot_1)
 p1
 # yay! success
 
-# plot 2
+#### plot 2 ####
 plot.new
 frame()
 frame.new
@@ -108,3 +106,129 @@ ggplot(data = new_df, aes(x = log_gdpPercap,
                              by = country,
                              colour = continent)) +
   geom_point()
+# set to p2 for Plot 2
+
+p2 <- ggplot(data = new_df, aes(x = log_gdpPercap, 
+                                y = lifeExp, 
+                                by = country,
+                                colour = continent)) +
+  geom_point()
+# yay! success
+
+### Plot 3 ####
+
+#saw on website. this doesn't work
+new_df
+p2 +
+  geom_smooth(method = lm, se = FALSE )
+
+?smooth
+?geom_smooth
+?lm
+p2
+
+# Isaac taught me to add the "group" to 1 for the
+# geom_smooth command so that it only sees it as
+# one group
+
+p2 +
+  geom_smooth(method = lm, se = FALSE, aes(group = 1))
+
+p3 <- p2 +
+  geom_smooth(method = lm, se = FALSE, aes(group = 1))
+
+#success
+
+
+#### Plot 4 ####
+
+# this isnt working either
+gapminder %>%
+mutate(density = lifeExp * pop) %>%
+  group_by(continent) %>%
+  summarise(mean_density = mean (density))
+
+mean_density_df <- mutate(gapminder, density = lifeExp * pop)
+# Restarted R session
+library(gapminder)
+library(ggplot2)
+library(dplyr)
+library(mean_density_df)
+
+# below has "by = year" in ggplot aes command
+
+ggplot(data = mean_density_df, aes(x = lifeExp, by = year)) +
+  geom_density(data = mean_density_df, aes(by = continent,
+                                           by = year,
+                                           color = continent)) +
+  facet_wrap(~ year, ncol = 4)
+
+dev.new()
+# below does NOT have the by = year in ggplot aes
+# command but still has same output
+
+(ggplot(data = mean_density_df, aes(x = lifeExp)) +
+          geom_density(data = mean_density_df, 
+                       aes(by = continent,
+                           by = year,
+                           color = continent)) +
+          facet_wrap(~ year, ncol = 4))
+
+# Isaac helped me
+# realize that I didnt need to filter the years
+# also that I just needed to use wrap so that it'll
+# wrap it with 4 columns
+
+p4 <- ggplot(data = mean_density_df, aes(x = lifeExp, by = year)) +
+  geom_density(data = mean_density_df, aes(by = continent,
+                                           by = year,
+                                           color = continent)) +
+  facet_wrap(~ year, ncol = 4)
+p4
+
+# Success after 5 hours
+
+#### Plot 5 ####
+
+ggplot( data = gapminder, aes(x = continent,
+                              y = lifeExp,
+                              color = continent)) +
+  geom_boxplot(data = gapminder, aes(by = year)) +
+  facet_wrap(~ year, ncol = 4)
+
+p5 <- ggplot( data = gapminder, aes(x = continent,
+                                    y = lifeExp,
+                                    color = continent)) +
+  geom_boxplot(data = gapminder, aes(by = year)) +
+  facet_wrap(~ year, ncol = 4)
+
+# success on the first try.
+
+?subset
+
+#### Plot 6 ####
+
+mean_density_df
+
+# This works!!! Isaac helped again
+
+mean_density_df
+ggplot(data = mean_density_df) + 
+  geom_density(data = mean_density_df,  alpha = (0.5), 
+               aes( x = lifeExp,
+                    by = continent,
+                    colour = continent,
+                    fill = continent)) +
+  geom_line()
+
+p6 <- ggplot(data = mean_density_df) + 
+  geom_density(data = mean_density_df,  alpha = (0.5), 
+               aes( x = lifeExp,
+                    by = continent,
+                    color = continent,
+                    fill = continent))
+
+# Success
+
+# Plot 7
+
