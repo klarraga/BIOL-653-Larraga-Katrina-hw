@@ -236,14 +236,29 @@ ggplot(data = mean_density_df) +
                     fill = continent)) +
   geom_line()
 
-p6 <- ggplot(data = mean_density_df) + 
+# to make lines black, do not specify color. only fill
+mean_density_df
+ggplot(data = mean_density_df) + 
   geom_density(data = mean_density_df,  alpha = (0.5), 
                aes( x = lifeExp,
                     by = continent,
-                    color = continent,
                     fill = continent))
+
+# trying with what jillian taught me
+ggplot(data = gapminder) +
+  geom_density(alpha = 0.5, aes(x = lifeExp,
+                                by = continent,
+                                fill = continent))
+
+
+
+p6 <- ggplot(data = gapminder) +
+  geom_density(alpha = 0.5, aes(x = lifeExp,
+                                by = continent,
+                                fill = continent))
 
 # Success
 
 # Plot 7
 
+filter(gapminder, continent == "Asia")
