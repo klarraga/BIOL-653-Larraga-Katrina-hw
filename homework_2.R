@@ -158,25 +158,27 @@ p3 <- p2 +
 #### Plot 4 ####
 
 # this isnt working either
+
+# This doesn't calculate the value that we are interested in.
 gapminder %>%
 mutate(density = lifeExp * pop) %>%
   group_by(continent) %>%
   summarise(mean_density = mean (density))
 
+# Same thing here, just calculating a new column of life expectancy times population (not a value we are interested in)
 mean_density_df <- mutate(gapminder, density = lifeExp * pop)
+
 # Restarted R session
 library(gapminder)
 library(ggplot2)
 library(dplyr)
 library(mean_density_df)
 
-# below has "by = year" in ggplot aes command
-
-ggplot(data = mean_density_df, aes(x = lifeExp, by = year)) +
-  geom_density(data = mean_density_df, aes(by = continent,
-                                           by = year,
-                                           color = continent)) +
+# you need to add fill 
+ggplot(data = gapminder, aes(x = lifeExp, colour = continent)) +
+  geom_density() +
   facet_wrap(~ year, ncol = 4)
+
 
 dev.new()
 # below does NOT have the by = year in ggplot aes
