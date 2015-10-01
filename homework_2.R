@@ -262,5 +262,10 @@ p6 <- ggplot(data = gapminder) +
 # Success
 
 # Plot 7
+p6
 
-filter(gapminder, continent == "Asia")
+# made a subset
+subset(gapminder, continent == "Asia")
+
+ggplot(subset(gapminder, continent == "Asia"), aes( x = lifeExp)) +
+  geom_density(aes(fill = "blue")) # try running this. it comes out freaking red. WHY!!!
