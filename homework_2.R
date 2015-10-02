@@ -184,22 +184,24 @@ dev.new()
 # below does NOT have the by = year in ggplot aes
 # command but still has same output
 
-(ggplot(data = mean_density_df, aes(x = lifeExp)) +
-          geom_density(data = mean_density_df, 
+ggplot(data = mean_density_df, aes(x = lifeExp)) +
+          geom_density(data = mean_density_df,
+                       alpha = 0.5,
                        aes(by = continent,
                            by = year,
-                           color = continent)) +
-          facet_wrap(~ year, ncol = 4))
+                           fill = continent)) +
+          facet_wrap(~ year, ncol = 4)
 
 # Isaac helped me
 # realize that I didnt need to filter the years
 # also that I just needed to use wrap so that it'll
 # wrap it with 4 columns
 
-p4 <- ggplot(data = mean_density_df, aes(x = lifeExp, by = year)) +
-  geom_density(data = mean_density_df, aes(by = continent,
-                                           by = year,
-                                           color = continent)) +
+p4 <- ggplot(data = mean_density_df, aes(x = lifeExp)) +
+  geom_density(alpha = 0.5,
+               aes(by = continent,
+                   by = year,
+                   fill = continent)) +
   facet_wrap(~ year, ncol = 4)
 p4
 
@@ -273,11 +275,61 @@ ggplot(subset(gapminder, continent == "Asia"), aes( x = lifeExp)) +
   geom_vline(xintercept = 60)
 
 p7 <- ggplot(subset(gapminder, continent == "Asia"), aes( x = lifeExp)) +
-  geom_density(fill = "blue", alpha = 0.5) +
+  geom_density(fill = "green", alpha = 0.5) +
   ggtitle("Life Expectancy in Asia")+
-  geom_vline(xintercept = 60)
+  geom_vline(xintercept = mean(gapminder$lifeExp))
 
 #### Plot 8 ####
 
+# this is plot 4-- as example. delete after
+ggplot(data = mean_density_df, aes(x = lifeExp)) +
+  geom_density(alpha = 0.5,
+               aes(by = continent,
+                   by = year,
+                   fill = continent)) +
+  facet_wrap(~ year, ncol = 4)
 
- 
+
+ggplot(gapminder, aes(x = lifeExp)) +
+  geom_density(alpha =0.5,
+               aes(by = continent,
+                   fill = continent)) +
+  facet_wrap(~ continent, ncol = 3) +
+  geom_vline(xintercept = mean(gapminder, lifeExp))
+mean_life_exp <- summarise(gapminder,
+          mean = mean(lifeExp))
+mean_life_exp
+
+ggplot(gapminder, aes(x = lifeExp)) +
+  geom_density(alpha =0.5,
+               aes(by = continent,
+                   fill = continent)) +
+  facet_wrap(~ continent, ncol = 3) +
+  geom_vline(xintercept = mean(gapminder$lifeExp)) # Is there another way to get the mean line like that? Also, is there another way to get the mean without using the $ inbetween gapminder and lifeExp?
+
+
+p8 <- ggplot(gapminder, aes(x = lifeExp)) +
+  geom_density(alpha =0.5,
+               aes(by = continent,
+                   fill = continent)) +
+  facet_wrap(~ continent, ncol = 3) +
+  geom_vline(xintercept = mean(gapminder$lifeExp))
+p8 # I have no idea why my "mean" lines are not at the same location as on the example on the hw. Help!!
+
+#### PART 3 ####
+
+library(ggplot2)
+hw_gapminder <- read.csv('hw_gapminder_from_site.csv')
+mean_lifeExp <- mean(hw_gapminder$lifeExp)
+mean_lifeExp
+small_set <- hw_gapminder[c(1, 2, 3, 4, 1300:1304), c('country', 'continent', 'year')]
+small_set #yay! I found it!
+
+mean_gdp <- mean(hw_gapminder$gdpPercap)
+
+#maybe just try gapminder?
+
+mean(gapminder$gdpPercap)
+
+max_country <- hw_gapminder$country[which(hw_gapminder$lifeExp = max),
+                                    (hw_gapminder$lifeExp)]
