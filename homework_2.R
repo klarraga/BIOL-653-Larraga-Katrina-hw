@@ -261,11 +261,23 @@ p6 <- ggplot(data = gapminder) +
 
 # Success
 
-# Plot 7
+#### Plot 7 ####
 p6
 
 # made a subset
 subset(gapminder, continent == "Asia")
 
 ggplot(subset(gapminder, continent == "Asia"), aes( x = lifeExp)) +
-  geom_density(aes(fill = "blue")) # try running this. it comes out freaking red. WHY!!!
+  geom_density(fill = "blue", alpha = 0.5) +
+  ggtitle("Life Expectancy in Asia") +
+  geom_vline(xintercept = 60)
+
+p7 <- ggplot(subset(gapminder, continent == "Asia"), aes( x = lifeExp)) +
+  geom_density(fill = "blue", alpha = 0.5) +
+  ggtitle("Life Expectancy in Asia")+
+  geom_vline(xintercept = 60)
+
+#### Plot 8 ####
+
+
+ 
