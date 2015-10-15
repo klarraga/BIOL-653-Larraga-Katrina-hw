@@ -1,0 +1,393 @@
+library(ggplot2)
+
+#### plot 1 ####
+
+=======
+
+```{r}
+library(ggplot2)
+library(gapminder)
+library(dplyr)
+```
+
+In an R markdown document, you don't need to comment out text if it's outside of 
+an R code block. So you can make a nice document that integrates text and code 
+blocks.
+
+```{r}
+# You need to load gapminder
+# plot 1
+# why isnt this working?
+#ggplot2(data = gapminder, aes(x = gdpPercap, y =lifeExp)) + geom_point()
+
+# its ggplot, not ggplot2
+ggplot(data = gapminder, aes(x = year, y =lifeExp)) + 
+  geom_point()
+
+# set it to color by country
+
+ggplot(data = gapminder, aes(x = gdpPercap, 
+                             y = lifeExp, 
+                             by = country,
+                             colour = country)) +
+  geom_point()
+
+# set to color by continent
+ggplot(data = gapminder, aes(x = gdpPercap, 
+                             y = lifeExp, 
+                             by = country,
+                             colour = continent)) +
+  geom_point()
+
+p1 <-
+  ggplot(data = gapminder, aes(x = gdpPercap, 
+                                        y = lifeExp, 
+                                        by = country,
+                                        colour = continent)) +
+  geom_point()
+
+plot_1
+rm(plot_1)
+p1
+# yay! success
+```
+
+#### plot 2 ####
+
+You'll notice here that in the ```{r} 1``` part, I have included eval = FALSE. 
+That let's you see the code, but R doesn't try to run it, which is useful when you 
+have broken code, code that takes a really long time to run, or just a case 
+where you want the code to be displayed nicely but don't want the output.
+
+```{r, eval = FALSE}
+plot.new
+frame()
+frame.new
+?frame
+?transform
+# JD: I think your'e looking for: dev.new() here
+```
+
+This code chunk below isn't needed, you later figured out how to log transform 
+the data. I'll leave it for now, but you could delete if you'd like.
+
+```{r, eval = FALSE}
+# restarted R session
+ggplot(data = gapminder, aes(x = gdpPercap, 
+                             y = lifeExp, 
+                             by = country,
+                             colour = continent)) +
+  geom_point()
+p1
+# the above restart worked and now my plot is running
+
+?transform
+transform(loggdpPercap = log(gdpPercap))
+ggplot
+ggplot2
+library(ggplot2)
+library(dplyr)
+gapminder
+head(gapminder)
+# this works cause ram taught me
+
+# look at the arguments and examples for mutate() - the dplyr tutorial using the nycflights13 data will be useful to help you clean this up.
+mutate(gapminder, loggdpPercap = log(gapminder$'gdpPercap'
+) )
+
+# trying to figure out how to view my loggdpPercap
+?view
+??view
+view(1:10)
+?show
+
+# run to plot
+ggplot(data = gapminder, aes(x = loggdpPercap, 
+                             y = lifeExp, 
+                             by = country,
+                             colour = continent)) +
+  geom_point()
+loggdpPercap
+
+log(gapminder$'gdpPercap')
+
+mutate(gapminder, loggdpPercap = log(gapminder$'gdpPercap'
+) )
+
+loggdpPercap <- log(gapminder$'gdpPercap')
+head(gapminder)
+?add
+rm(loggdpPercap)
+```
+
+```{r}
+# jillian taught me how to save it to new_df
+
+mutate(gapminder, log_gdpPercap = log(gdpPercap))
+new_df <- mutate(gapminder, log_gdpPercap = log(gdpPercap)) # perfect
+
+new_df
+
+# try to plot now
+
+ggplot(data = new_df, aes(x = log_gdpPercap, 
+                             y = lifeExp, 
+                             by = country,
+                             colour = continent)) +
+  geom_point()
+# set to p2 for Plot 2
+```
+
+### Plot 2! 
+
+```{r}
+p2 <- ggplot(data = new_df, aes(x = log_gdpPercap, 
+                                y = lifeExp, 
+                                by = country,
+                                colour = continent)) +
+  geom_point()
+# yay! success
+```
+
+### Plot 3 
+
+```{r}
+#saw on website. this doesn't work
+
+new_df
+p2 +
+  geom_smooth(method = lm, se = TRUE, aes(group = 1))
+
+# Using group = 1 in the aesthetics 
+
+?smooth
+?geom_smooth
+?lm
+p2
+
+# Isaac taught me to add the "group" to 1 for the
+# geom_smooth command so that it only sees it as
+# one group
+
+p2 +
+  geom_smooth(method = lm, se = FALSE, aes(group = 1))
+
+p3 <- p2 +
+  geom_smooth(method = lm, se = FALSE, aes(group = 1))
+
+#success
+```
+
+#### Plot 4 ####
+
+```{r}
+# this isnt working either
+
+# This doesn't calculate the value that we are interested in.
+gapminder %>%
+mutate(density = lifeExp * pop) %>%
+  group_by(continent) %>%
+  summarise(mean_density = mean(density))
+
+# Same thing here, just calculating a new column of life expectancy times population (not a value we are interested in)
+mean_density_df <- mutate(gapminder, density = lifeExp * pop)
+```
+
+```{r}
+# JD: No need to keep restarting your R session. 
+# Restarted R session
+library(gapminder)
+library(ggplot2)
+library(dplyr)
+```
+
+```{r}
+# you need to add fill 
+ggplot(data = gapminder, aes(x = lifeExp, colour = continent)) +
+  geom_density() +
+  facet_wrap(~ year, ncol = 4)
+
+# JD - I've commented out the dev.new() I don't know if it interferes with the 
+# rendering of an Rmarkdown document
+#dev.new()
+# below does NOT have the by = year in ggplot aes
+# command but still has same output
+
+ggplot(data = mean_density_df, aes(x = lifeExp)) +
+          geom_density(data = mean_density_df,
+                       alpha = 0.5,
+                       aes(by = continent,
+                           by = year,
+                           fill = continent)) +
+          facet_wrap(~ year, ncol = 4)
+
+# Isaac helped me
+# realize that I didnt need to filter the years
+# also that I just needed to use wrap so that it'll
+# wrap it with 4 columns
+
+p4 <- ggplot(data = mean_density_df, aes(x = lifeExp)) +
+  geom_density(alpha = 0.5,
+               aes(by = continent,
+                   by = year,
+                   fill = continent)) +
+  facet_wrap(~ year, ncol = 4)
+p4
+
+# Success after 5 hours
+```
+
+#### Plot 5 ####
+
+```{r}
+ggplot( data = gapminder, aes(x = continent,
+                              y = lifeExp,
+                              color = continent)) +
+  geom_boxplot(data = gapminder, aes(by = year)) +
+  facet_wrap(~ year, ncol = 4)
+
+p5 <- ggplot( data = gapminder, aes(x = continent,
+                                    y = lifeExp,
+                                    color = continent)) +
+  geom_boxplot(data = gapminder, aes(by = year)) +
+  facet_wrap(~ year, ncol = 4)
+
+# success on the first try.
+# woot!
+```
+
+
+`?subset`
+
+#### Plot 6 ####
+
+```{r}
+mean_density_df
+
+# This works!!! Isaac helped again
+
+mean_density_df
+ggplot(data = mean_density_df) + 
+  geom_density(data = mean_density_df,  alpha = (0.5), 
+               aes( x = lifeExp,
+                    by = continent,
+                    colour = continent,
+                    fill = continent)) +
+  geom_line()
+
+# to make lines black, do not specify color. only fill
+mean_density_df
+ggplot(data = mean_density_df) + 
+  geom_density(data = mean_density_df,  alpha = (0.5), 
+               aes( x = lifeExp,
+                    by = continent,
+                    fill = continent))
+
+# trying with what jillian taught me
+ggplot(data = gapminder) +
+  geom_density(alpha = 0.5, aes(x = lifeExp,
+                                by = continent,
+                                fill = continent))
+
+
+
+p6 <- ggplot(data = gapminder) +
+  geom_density(alpha = 0.5, aes(x = lifeExp,
+                                by = continent,
+                                fill = continent))
+
+# Success
+# woot!
+```
+
+#### Plot 7 ####
+
+```{r}
+p6
+
+# made a subset
+subset(gapminder, continent == "Asia")
+
+ggplot(subset(gapminder, continent == "Asia"), aes( x = lifeExp)) +
+  geom_density(fill = "blue", alpha = 0.5) +
+  ggtitle("Life Expectancy in Asia") +
+  geom_vline(xintercept = 60)
+
+p7 <- ggplot(subset(gapminder, continent == "Asia"), aes( x = lifeExp)) +
+  geom_density(fill = "green", alpha = 0.5) +
+  ggtitle("Life Expectancy in Asia")+
+  geom_vline(xintercept = mean(gapminder$lifeExp))
+```
+
+#### Plot 8 ####
+
+```{r}
+ggplot(gapminder, aes(x = lifeExp)) +
+  geom_density(alpha =0.5, aes(by = continent, fill = continent)) +
+  facet_wrap(~ continent, ncol = 3) +
+  geom_vline(xintercept = mean(gapminder, lifeExp))
+
+mean_life_exp <- summarise(gapminder, mean = mean(lifeExp))
+mean_life_exp
+
+# JD: You needed to group by continent here in your dplyr chain.
+
+mean_life_exp <- 
+  group_by(gapminder, continent) %>% 
+  summarise(gapminder, mean = mean(lifeExp))
+
+ggplot(gapminder, aes(x = lifeExp)) +
+  geom_density(alpha =0.5, aes(by = continent, fill = continent)) +
+  facet_wrap(~ continent, ncol = 3) +
+  geom_vline(xintercept = mean(gapminder$lifeExp)) # Is there another way to get the mean line like that? Also, is there another way to get the mean without using the $ inbetween gapminder and lifeExp?
+
+
+p8 <- ggplot(gapminder, aes(x = lifeExp)) +
+  geom_density(alpha =0.5, aes(by = continent, fill = continent)) +
+  facet_wrap(~ continent, ncol = 3) +
+  geom_vline(xintercept = mean(gapminder$lifeExp))
+p8 # I have no idea why my "mean" lines are not at the same location as on the example on the hw. Help!!
+
+# JD: You have to specify that you want the xintercept to change based on the 
+# different groupings of the data, therefore it must be included as an aesthetic. 
+# You also need to change the source data for the geom_vline to be the 
+
+p8 <- ggplot(gapminder, aes(x = lifeExp)) +
+  geom_density(alpha =0.5, aes(by = continent, fill = continent)) +
+  facet_wrap(~ continent, ncol = 3) +
+  geom_vline(data = mean_life_exp, aes(xintercept = mean)))
+
+```
+
+#### PART 3 ####
+
+```{r}
+hw_gapminder <- read.csv('hw_gapminder_from_site.csv')
+# JD: Is hw_gapminder_from_site.csv the name of the file? Did you change the 
+# name when you saved it?
+
+mean_lifeExp <- mean(hw_gapminder$lifeExp)
+mean_lifeExp
+
+small_set <- hw_gapminder[c(1, 2, 3, 4, 1300:1304), c('country', 'continent', 'year')]
+small_set #yay! I found it!
+
+mean_gdp <- mean(hw_gapminder$gdpPercap)
+
+#maybe just try gapminder?
+
+# JD: there were NAs in the dataset. Checkout ?mean() and you'll see that there 
+# is an option to ignore NA values when calculating the mean
+mean_gdp <- mean(hw_gapminder$gdpPercap, na.rm = TRUE)
+
+#mean(gapminder$gdpPercap)
+
+#max_country <- hw_gapminder$country[which(hw_gapminder$lifeExp = max),
+#                                    (hw_gapminder$lifeExp)]
+
+# JD: Here if you look at the examples in the which() help file, you'll notice 
+# that you need a double equals sign because you are testing an equality.
+
+max_country <- hw_gapminder$country[which(hw_gapminder$lifeExp == max)]
+
+
